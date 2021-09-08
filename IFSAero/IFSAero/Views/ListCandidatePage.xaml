@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="IFSAero.Views.ListCandidatePage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:IFSAero.Models"
+    xmlns:viewmodels="clr-namespace:IFSAero.ViewModels"
+    Title="Candidates"
+    x:DataType="viewmodels:ListCandidateViewModel">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding OpenFilteredCandidateCommand}" Text="Filtered Candidates" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout Margin="20">
+            <CollectionView x:Name="ListCandidate" ItemsSource="{Binding Candidates}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Candidate">
+                        <StackLayout>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="100" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    FontAttributes="Bold"
+                                    FontSize="Large"
+                                    Text="{Binding fullName}" />
+                                <Button
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Command="{Binding Path=BindingContext.AcceptCommand, Source={Reference ListCandidate}}"
+                                    CommandParameter="{Binding .}"
+                                    HeightRequest="50"
+                                    Text="Accept" />
+                                <Button
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    Command="{Binding Path=BindingContext.RejectCommand, Source={Reference ListCandidate}}"
+                                    CommandParameter="{Binding .}"
+                                    HeightRequest="50"
+                                    Text="Reject" />
+                            </Grid>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyViewTemplate>
+                    <DataTemplate>
+                        <Label Text="No data" />
+                    </DataTemplate>
+                </CollectionView.EmptyViewTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
