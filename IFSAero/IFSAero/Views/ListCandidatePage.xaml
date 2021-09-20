@@ -12,49 +12,46 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout Margin="20">
-            <CollectionView x:Name="ListCandidate" ItemsSource="{Binding Candidates}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:Candidate">
-                        <StackLayout>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="100" />
-                                    <ColumnDefinition Width="100" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <Label
-                                    Grid.Row="0"
-                                    Grid.Column="0"
-                                    FontAttributes="Bold"
-                                    FontSize="Large"
-                                    Text="{Binding fullName}" />
-                                <Button
-                                    Grid.Row="0"
-                                    Grid.Column="1"
-                                    Command="{Binding Path=BindingContext.AcceptCommand, Source={Reference ListCandidate}}"
-                                    CommandParameter="{Binding .}"
-                                    HeightRequest="50"
-                                    Text="Accept" />
-                                <Button
-                                    Grid.Row="0"
-                                    Grid.Column="2"
-                                    Command="{Binding Path=BindingContext.RejectCommand, Source={Reference ListCandidate}}"
-                                    CommandParameter="{Binding .}"
-                                    HeightRequest="50"
-                                    Text="Reject" />
-                            </Grid>
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-                <CollectionView.EmptyViewTemplate>
-                    <DataTemplate>
-                        <Label Text="No data" />
-                    </DataTemplate>
-                </CollectionView.EmptyViewTemplate>
-            </CollectionView>
+            <RefreshView Command="{Binding ReLoadCandidateCommand}" IsRefreshing="{Binding IsRefreshing}">
+                <CollectionView x:Name="ListCandidate" ItemsSource="{Binding Candidates}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Candidate">
+                            <SwipeView>
+                                <SwipeView.LeftItems>
+                                    <SwipeItems>
+                                        <SwipeItem
+                                            BackgroundColor="Red"
+                                            Command="{Binding Path=BindingContext.RejectCommand, Source={Reference ListCandidate}}"
+                                            CommandParameter="{Binding .}"
+                                            Text="Reject" />
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem
+                                            BackgroundColor="LightGreen"
+                                            Command="{Binding Path=BindingContext.AcceptCommand, Source={Reference ListCandidate}}"
+                                            CommandParameter="{Binding .}"
+                                            Text="Accept" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Grid HeightRequest="60">
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="Large"
+                                        HorizontalTextAlignment="Center"
+                                        Text="{Binding fullName}" />
+                                </Grid>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.EmptyViewTemplate>
+                        <DataTemplate>
+                            <Label Text="No data" />
+                        </DataTemplate>
+                    </CollectionView.EmptyViewTemplate>
+                </CollectionView>
+            </RefreshView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

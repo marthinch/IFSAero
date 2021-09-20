@@ -14,15 +14,23 @@ namespace IFSAero.ViewModels
     public class ListCandidateViewModel : BaseViewModel
     {
         public ICommand LoadCandidateCommand => new Command(async () => await LoadCandidatesAsync());
+        public ICommand ReLoadCandidateCommand => new Command(async () => await ReLoadCandidatesAsync());
         public ICommand AcceptCommand => new Command<Candidate>((candidate) => Accept(candidate));
         public ICommand RejectCommand => new Command<Candidate>((candidate) => Reject(candidate));
         public ICommand OpenFilteredCandidateCommand => new Command(async () => await OpenFilteredCandidateAsync());
 
-        private ObservableCollection<Candidate> candidates;
+        private ObservableCollection<Candidate> candidates = new ObservableCollection<Candidate>();
         public ObservableCollection<Candidate> Candidates
         {
             get => candidates;
             set => SetProperty(ref candidates, value);
+        }
+
+        private bool isRefreshing;
+        public bool IsRefreshing
+        {
+            get => isRefreshing;
+            set => SetProperty(ref isRefreshing, value);
         }
 
         private readonly string technologyId;
@@ -64,10 +72,20 @@ namespace IFSAero.ViewModels
                         return;
                 }
 
-                Candidates = new ObservableCollection<Candidate>();
                 foreach (var item in items)
                     Candidates.Add(item);
             }
+        }
+
+        private async Task ReLoadCandidatesAsync()
+        {
+            IsRefreshing = true;
+
+            Candidates.Clear();
+
+            await LoadCandidatesAsync().ConfigureAwait(false);
+
+            IsRefreshing = false;
         }
 
         private void Accept(Candidate candidate)
